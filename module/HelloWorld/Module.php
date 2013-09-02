@@ -2,26 +2,26 @@
 namespace Helloworld;
 
     class Module
-    {
-//     	public function init(ModuleManager $moduleManager)
-//     	{
-//     		$moduleManager
-//     			->getEventManager()
-//     			->attach(
-// 						ModuleEvent::EVENT_LOAD_MODULES_POST,
-//     					array($this, 'onModulesPost')
-//     		);
-//     		$sharedEvents = $moduleManager
-//     			->getEventManager()->getShared();
-//     		$sharedEvents->attach(
-//     					'application',
-//     					'route',
-//     				function($e){
-//     			die("Event '{$e->getName()}'wurde ausgeloest!");
-//     		}
-//     		);
+    {   public function getViewHelperConfig()
+ {
+ return array(
+ 'invokables' => array(
+ 'displayCurrentDate'
+ => 'Helloworld\View\Helper\DisplayCurrentDate'
+ )
+ );
+ }
+    	
+    	public function getControllerPluginConfig()
+    	{
+    		return array(
+    			'invokables'=> array(
+    				'currentDate'
+    					=> 'Helloworld\Controller\Plugin\CurrentDate'
+    			)
+    		);
     		
-//     	}
+    	}
     	
     	public function getServiceConfig(){
     		
