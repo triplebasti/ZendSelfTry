@@ -1,3 +1,132 @@
-<h1><?php echo $this->greeting; ?> Events sind kACKE</h1>
 <h2><?php echo $this->displayCurrentDate(); ?></h2>
+<input type="text" id='playerName' placeholder='Name'>
+<br>
+<input type="button" id='save' value='Spieler eingeben'>
+<input type="button" id='start' value='Start Turnier' hidden='true' ><br>
+<input type="button" id='restart' value='Zuruecksetzen'><br>
+<input type="text" id='matchnummber' placeholder='Spielnummer' hidden='true'>
+<input type="text" id='winnerName' placeholder='Gewinner' hidden='true'>
+<input type="button" id='matchreload' value='Senden' hidden='true'>
+<div id='member'>
+    <span>SpielerAnzahl</span>
+    <div id='spielerAnzahl'></div>
+    </div><br>
+<div id='table'></div>
 
+<script type="text/javascript">
+    playerArray = [];
+    winnerArray = [];
+    trnumber = 0;
+    counter = 0;
+    tableTree='';
+    id = 0;
+    spalte1 = 1;
+    spalte2 = 0;
+    $('#matchreload').click(function(){
+        var matchNummber = $('#matchnummber').val();
+        var matchWinner = $('#winnerName').val();
+        $('#winner'+matchNummber+'').html(matchWinner);
+
+        })
+    $('#restart').click(function(){
+        $('#start').hide();
+        $('#save').show();
+        playerArray = [];
+        counter = 0;
+        id = 0;
+        spalte1 = 1;
+        spalte2 = 0;
+        $('#spielerAnzahl').html(counter);
+        $('#table').html('');
+        $('#playerName').show();
+        $('#playerName').val('');
+        $('#member').show();
+        $('#matchnummber').hide();
+        $('#winnerName').hide();
+        $('#matchreload').hide();
+        })
+    $('#save').click(function(){
+        if($('#playerName').val()!=''){
+            playerArray.push($('#playerName').val());
+            $('#playerName').val('');
+            counter++;
+            $('#spielerAnzahl').html(counter);
+            if(counter>=4){
+                $('#start').show();
+                }
+        }else{
+            alert('Name eingeben!');
+        }
+    })
+     $('#start').click(function(){
+         $('#save').hide();
+         $('#playerName').hide();
+         $('#matchnummber').show();
+         $('#winnerName').show();
+         $('#member').hide();
+         $('#matchreload').show();
+         tableTree = '';
+         playerArray = shuffle(playerArray);
+         tableTree += '<table>';
+         for(var i = 0 ; i < (counter*2)-1 ; i++){
+             if(i % 2 != 0){
+                tableTree +='<tr id='+trnumber+'>'
+                if(spalte1 == 2){
+                    tableTree +='<td></td>'
+                    }
+                if(spalte1 == 4){
+                    tableTree +='<td></td>'
+                    tableTree +='<td></td>'
+                    spalte1 = 0;
+                    spalte2 ++;
+                }
+                if(spalte2 == 2){
+                    tableTree +='<td></td>'
+                    spalte1 = 0;
+                    spalte2 = 0;
+                }
+                tableTree +='<td>VS'+id+'</td>'
+                tableTree +='<td id="winner'+id+'">Gewinner</td>'
+                tableTree +='</tr>'
+                spalte1++
+            }else{
+                tableTree +='<tr id='+trnumber+'>'
+                    tableTree +='<td id="fighter'+id+'">'+playerArray[id]+'</td>'
+                tableTree +='</tr>'
+            id++;
+            }
+             trnumber++;
+         }
+         tableTree += '</table>';
+         $('#table').append(tableTree);
+
+         $('[id*=fighter]').click(function(){
+            var numberTree = $(this).attr('id').substring(7);
+            if(numberTree == 0 || numberTree == 1 ){
+                $('#winner1').html($(this).html());
+                }
+         })
+     })
+     function shuffle(array) {
+        var currentIndex = array.length
+        , temporaryValue
+        , randomIndex
+        ;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+     return array;
+     }
+
+</script>
