@@ -8,6 +8,7 @@
 <input type="text" id='matchnummber' placeholder='Spielnummer' hidden='true'>
 <input type="text" id='winnerName' placeholder='Gewinner' hidden='true'>
 <input type="button" id='matchreload' value='Senden' hidden='true'>
+<div id='teams' hidden='true'></div>
 <div id='member'>
     <span>SpielerAnzahl</span>
     <div id='spielerAnzahl'></div>
@@ -26,7 +27,7 @@
     $('#matchreload').click(function(){
         var matchNummber = $('#matchnummber').val();
         var matchWinner = $('#winnerName').val();
-        if(playerArray.indexOf(matchWinner)>=0){
+        if(playerArray.indexOf(matchWinner)>=0 ||stringTeams.indexOf(matchWinner)>=0){
             $('#winner'+matchNummber+'').html(matchWinner);
         }
         })
@@ -47,6 +48,8 @@
         $('#winnerName').hide();
         $('#matchreload').hide();
         $('#start2v2').hide();
+        $('#teams').hide();
+        $('#teams').html('');
         })
     $('#save').click(function(){
         if($('#playerName').val()!=''){
@@ -56,10 +59,12 @@
             $('#spielerAnzahl').html(counter);
             if(counter>=4){
                 $('#start').show();
-                if(counter%2=0){
-                    $('#start2vs2').show();
-                    }
+                if(counter%2 == 0){
+                    $('#start2v2').show();
+                }else{
+                    $('#start2v2').hide();
                 }
+            }
         }else{
             alert('Name eingeben!');
         }
@@ -113,14 +118,11 @@
         , randomIndex
         ;
 
-        // While there remain elements to shuffle...
         while (0 !== currentIndex) {
 
-            // Pick a remaining element...
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex -= 1;
 
-            // And swap it with the current element.
             temporaryValue = array[currentIndex];
             array[currentIndex] = array[randomIndex];
             array[randomIndex] = temporaryValue;
@@ -129,10 +131,64 @@
      return array;
      }
     $('#start2v2').click(function(){
+        $('#save').hide();
+        $('#playerName').hide();
+        $('#matchnummber').show();
+        $('#winnerName').show();
+        $('#member').hide();
+        $('#start2v2').hide();
+        $('#start').hide();
+        $('#matchreload').show();
+        $('#teams').show();
+        stringTeams = '';
         for(var i = 0; i < 2; i++){
             playerArray = shuffle(playerArray);
         }
-
+        tempArray=[];
+        var i,j,chunk = 2;
+        for (i=0,j=playerArray.length; i<j; i+=chunk) {
+            tempArray.push( playerArray.slice(i,i+chunk));
+        }
+        for(var i = 0; i < 2; i++){
+            tempArray = shuffle(tempArray);
+        }
+        for(i = 0; i < tempArray.length; i++){
+            stringTeams += 'Team'+(i+1)+': '+ tempArray[i] + '<br>';
+            }
+        $('#teams').append(stringTeams);
+        tableTree = '';
+        tableTree += '<table>';
+        for(var i = 0 ; i < (counter)-1 ; i++){
+            if(i % 2 != 0){
+               tableTree +='<tr id='+trnumber+'>'
+               if(spalte1 == 2){
+                   tableTree +='<td></td>'
+                   }
+               if(spalte1 == 4){
+                   tableTree +='<td></td>'
+                   tableTree +='<td></td>'
+                   spalte1 = 0;
+                   spalte2 ++;
+               }
+               if(spalte2 == 2){
+                   tableTree +='<td></td>'
+                   spalte1 = 0;
+                   spalte2 = 0;
+               }
+               tableTree +='<td>VS'+id+'</td>'
+               tableTree +='<td id="winner'+id+'">Gewinner</td>'
+               tableTree +='</tr>'
+               spalte1++
+           }else{
+               tableTree +='<tr id='+trnumber+'>'
+                   tableTree +='<td id="fighter'+id+'">Team'+[id+1]+'</td>'
+               tableTree +='</tr>'
+           id++;
+           }
+            trnumber++;
+        }
+        tableTree += '</table>';
+        $('#table').append(tableTree);
     })
 
 </script>
