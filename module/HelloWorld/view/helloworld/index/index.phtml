@@ -2,7 +2,8 @@
 <input type="text" id='playerName' placeholder='Name'>
 <br>
 <input type="button" id='save' value='Spieler eingeben'>
-<input type="button" id='start' value='Start Turnier' hidden='true' ><br>
+<input type="button" id='start' value='Start 1vs1 Turnier' hidden='true' >
+<input type="button" id='start2v2' value='Start 2vs2 Turnier' hidden='true'><br>
 <input type="button" id='restart' value='Zuruecksetzen'><br>
 <input type="text" id='matchnummber' placeholder='Spielnummer' hidden='true'>
 <input type="text" id='winnerName' placeholder='Gewinner' hidden='true'>
@@ -25,8 +26,9 @@
     $('#matchreload').click(function(){
         var matchNummber = $('#matchnummber').val();
         var matchWinner = $('#winnerName').val();
-        $('#winner'+matchNummber+'').html(matchWinner);
-
+        if(playerArray.indexOf(matchWinner)>=0){
+            $('#winner'+matchNummber+'').html(matchWinner);
+        }
         })
     $('#restart').click(function(){
         $('#start').hide();
@@ -44,6 +46,7 @@
         $('#matchnummber').hide();
         $('#winnerName').hide();
         $('#matchreload').hide();
+        $('#start2v2').hide();
         })
     $('#save').click(function(){
         if($('#playerName').val()!=''){
@@ -53,6 +56,9 @@
             $('#spielerAnzahl').html(counter);
             if(counter>=4){
                 $('#start').show();
+                if(counter%2=0){
+                    $('#start2vs2').show();
+                    }
                 }
         }else{
             alert('Name eingeben!');
@@ -100,12 +106,6 @@
          tableTree += '</table>';
          $('#table').append(tableTree);
 
-         $('[id*=fighter]').click(function(){
-            var numberTree = $(this).attr('id').substring(7);
-            if(numberTree == 0 || numberTree == 1 ){
-                $('#winner1').html($(this).html());
-                }
-         })
      })
      function shuffle(array) {
         var currentIndex = array.length
@@ -128,5 +128,11 @@
 
      return array;
      }
+    $('#start2v2').click(function(){
+        for(var i = 0; i < 2; i++){
+            playerArray = shuffle(playerArray);
+        }
+
+    })
 
 </script>
