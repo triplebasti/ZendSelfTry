@@ -7,12 +7,23 @@
 <input type="button" id='restart' value='Zuruecksetzen'><br>
 <input type="text" id='matchnummber' placeholder='Spielnummer' hidden='true'>
 <input type="text" id='winnerName' placeholder='Gewinner' hidden='true'>
-<input type="button" id='matchreload' value='Senden' hidden='true'>
+<input type="button" id='matchreload' value='Senden' hidden='true'><br>
+<input type="text" id='teamNumber' placeholder='Team Nummer' hidden='true'>
+<input type="text" id='firstPlayer' placeholder='Erster Spieler' hidden='true'>
+<input type="text" id='secondPlayer' placeholder='Zweiter Spieler' hidden='true'>
+<input type="button" id='changeTeambutton' value='Aendern' hidden='true'><br>
 <div id='teams' hidden='true'></div>
 <div id='member'>
     <span>SpielerAnzahl</span>
     <div id='spielerAnzahl'></div>
+    <span>Teilnehmer</span>
+    <div id='teilnehmer'></div>
     </div><br>
+
+<input type="button" id='changeTeilnehmer' value='Teilnehmer bearbeiten' hidden='true'>
+<input type="text" id='oldmember' placeholder='Alter Teilnehmer' hidden='true'>
+<input type="text" id='newmember' placeholder='Neu oder loeschen' hidden='true'>
+<input type="button" id='changebutton' value='Senden' hidden='true'>
 <div id='table'></div>
 
 <script type="text/javascript">
@@ -29,8 +40,10 @@
         var matchWinner = $('#winnerName').val();
         if(playerArray.indexOf(matchWinner)>=0 ||stringTeams.indexOf(matchWinner)>=0){
             $('#winner'+matchNummber+'').html(matchWinner);
+            $('#matchnummber').val('');
+            $('#winnerName').val('');
         }
-        })
+    })
     $('#restart').click(function(){
         $('#start').hide();
         $('#save').show();
@@ -50,13 +63,29 @@
         $('#start2v2').hide();
         $('#teams').hide();
         $('#teams').html('');
+        $('#teilnehmer').html('');
+        $('#changeTeilnehmer').hide();
+        $('#oldmember').hide();
+        $('#newmember').hide();
+        $('#changebutton').hide();
+        $('#newmember').val('');
+        $('#oldmember').val('');
+        $('#teamNumber').hide();
+        $('#firstPlayer').hide();
+        $('#secondPlayer').hide();
+        $('#changeTeambutton').hide();
+
         })
     $('#save').click(function(){
         if($('#playerName').val()!=''){
             playerArray.push($('#playerName').val());
             $('#playerName').val('');
             counter++;
+            $('#teilnehmer').html(playerArray+'<br>');
             $('#spielerAnzahl').html(counter);
+            if(counter>0){
+                $('#changeTeilnehmer').show();
+            }
             if(counter>=4){
                 $('#start').show();
                 if(counter%2 == 0){
@@ -70,12 +99,16 @@
         }
     })
      $('#start').click(function(){
+         $('#changeTeilnehmer').hide();
          $('#save').hide();
          $('#playerName').hide();
          $('#matchnummber').show();
          $('#winnerName').show();
          $('#member').hide();
          $('#matchreload').show();
+         $('#oldmember').hide();
+         $('#newmember').hide();
+         $('#changebutton').hide();
          tableTree = '';
          playerArray = shuffle(playerArray);
          tableTree += '<table>';
@@ -131,6 +164,11 @@
      return array;
      }
     $('#start2v2').click(function(){
+        $('#teamNumber').show();
+        $('#firstPlayer').show();
+        $('#secondPlayer').show();
+        $('#changeTeambutton').show();
+        $('#changeTeilnehmer').hide();
         $('#save').hide();
         $('#playerName').hide();
         $('#matchnummber').show();
@@ -140,6 +178,9 @@
         $('#start').hide();
         $('#matchreload').show();
         $('#teams').show();
+        $('#oldmember').hide();
+        $('#newmember').hide();
+        $('#changebutton').hide();
         stringTeams = '';
         for(var i = 0; i < 2; i++){
             playerArray = shuffle(playerArray);
@@ -190,5 +231,67 @@
         tableTree += '</table>';
         $('#table').append(tableTree);
     })
+    $('#changeTeilnehmer').click(function(){
+        $('#oldmember').show();
+        $('#newmember').show();
+        $('#changebutton').show();
+
+        })
+     $('#changebutton').click(function(){
+         if ($('#oldmember').val()!='') {
+             var index = playerArray.indexOf($('#oldmember').val());
+             if (index > -1) {
+                 if ($('#newmember').val()=='') {
+                     var newTempArray = [];
+                     for(var i=0;i<playerArray.length;i++){
+                         if(i!=index){
+                             newTempArray.push(playerArray[i]);
+                         }
+                     }
+                     playerArray = newTempArray;
+                     counter--;
+                 } else {
+                     playerArray[index] = $('#newmember').val();
+                 }
+
+             } else {
+                 alert('Teilnehmer nicht vorhande!');
+             }
+
+
+             $('#teilnehmer').html(playerArray+'<br>');
+             $('#spielerAnzahl').html(counter);
+             if (counter<1) {
+                 $('#changeTeilnehmer').hide();
+             }
+             if (counter<4) {
+                 $('#start').hide();
+             }
+             if (counter%2 == 0 && counter>=4) {
+                 $('#start2v2').show();
+             } else {
+                 $('#start2v2').hide();
+             }
+         } else {
+             alert('Namen eingeben!');
+         }
+     })
+     $('#changeTeambutton').click(function(){
+         if ( $('#firstPlayer').val() != '' && $('#secondPlayer').val() != '' && $('#teamNumber').val() != '') {
+             tempArray[$('#teamNumber').val()-1][0] = $('#firstPlayer').val();
+             tempArray[$('#teamNumber').val()-1][1] = $('#secondPlayer').val();
+             stringTeams = '';
+             $('#teams').html('');
+             for(i = 0; i < tempArray.length; i++){
+                 stringTeams += 'Team'+(i+1)+': '+ tempArray[i] + '<br>';
+                 }
+             $('#teams').append(stringTeams);
+             $('#firstPlayer').val('');
+             $('#secondPlayer').val('');
+             $('#teamNumber').val('');
+         } else {
+             alert('Voellstandig ausfuellen');
+         }
+     })
 
 </script>
