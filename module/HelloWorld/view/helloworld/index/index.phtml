@@ -39,7 +39,13 @@
         var matchNummber = $('#matchnummber').val();
         var matchWinner = $('#winnerName').val();
         if(playerArray.indexOf(matchWinner)>=0 ||stringTeams.indexOf(matchWinner)>=0){
-            $('#winner'+matchNummber+'').html(matchWinner);
+            if ($.isNumeric(matchNummber)) {
+                $('#winner'+matchNummber+'').html(matchWinner);
+            } else {
+                if ($.isNumeric(matchNummber.slice(2))) {
+                    $('#winner'+matchNummber.slice(2)+'').html(matchWinner);
+                }
+            }
             $('#matchnummber').val('');
             $('#winnerName').val('');
         }
