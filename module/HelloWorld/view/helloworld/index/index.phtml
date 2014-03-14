@@ -1,4 +1,5 @@
 <h2><?php echo $this->displayCurrentDate(); ?></h2>
+<input type="button" id="ajax" value="Test">
 <input type="text" id='playerName' placeholder='Name'>
 <br>
 <input type="button" id='save' value='Spieler eingeben'>
@@ -299,5 +300,9 @@
              alert('Voellstandig ausfuellen');
          }
      })
-
+    $('#ajax').click(function(){
+        $.post('/show', {data: 'nap'}).success(function(r){
+           console.log(r.Information);
+        });
+    })
 </script>
