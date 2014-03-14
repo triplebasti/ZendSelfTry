@@ -4,6 +4,8 @@ return array(
     'modules' => array(
         'Application',
         'HelloWorld',
+        'DoctrineModule',
+        'DoctrineORMModule',
 //     	'HelloWorldMod'
     ),
 

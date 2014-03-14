@@ -1,5 +1,4 @@
 <h2><?php echo $this->displayCurrentDate(); ?></h2>
-<input type="button" id="ajax" value="Test">
 <input type="text" id='playerName' placeholder='Name'>
 <br>
 <input type="button" id='save' value='Spieler eingeben'>
@@ -81,11 +80,13 @@
         $('#firstPlayer').hide();
         $('#secondPlayer').hide();
         $('#changeTeambutton').hide();
+        $.post('/show', {data: {Option:2}}).success(function(r){});
 
         })
     $('#save').click(function(){
         if($('#playerName').val()!=''){
             playerArray.push($('#playerName').val());
+            $.post('/show', {data: {Option:1, PlayerName: $('#playerName').val() }}).success(function(r){});
             $('#playerName').val('');
             counter++;
             $('#teilnehmer').html(playerArray+'<br>');
@@ -118,6 +119,7 @@
          $('#changebutton').hide();
          tableTree = '';
          playerArray = shuffle(playerArray);
+         $.post('/show', {data: {Option:3, PlayerArray: playerArray }}).success(function(r){});
          tableTree += '<table>';
          for(var i = 0 ; i < (counter*2)-1 ; i++){
              if(i % 2 != 0){
@@ -300,9 +302,5 @@
              alert('Voellstandig ausfuellen');
          }
      })
-    $('#ajax').click(function(){
-        $.post('/show', {data: 'nap'}).success(function(r){
-           console.log(r.Information);
-        });
-    })
+
 </script>
