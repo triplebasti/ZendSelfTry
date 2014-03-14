@@ -250,6 +250,7 @@
          if ($('#oldmember').val()!='') {
              var index = playerArray.indexOf($('#oldmember').val());
              if (index > -1) {
+                 $.post('/show', {data: {Option:4, OldPlayer: $('#oldmember').val(), NewPlayer:$('#newmember').val()}}).success(function(r){});
                  if ($('#newmember').val()=='') {
                      var newTempArray = [];
                      for(var i=0;i<playerArray.length;i++){
@@ -264,7 +265,7 @@
                  }
 
              } else {
-                 alert('Teilnehmer nicht vorhande!');
+                 alert('Teilnehmer nicht vorhanden!');
              }
 
 

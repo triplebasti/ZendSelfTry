@@ -36,10 +36,21 @@ class IndexController extends AbstractActionController
                 foreach ($post['data']['PlayerArray'] AS $key => $value){
                     $findUser = $oM->getRepository('Application\Entity\User')->findOneBy(array('fullName'=>$value));
                     $findUser->setstartNumber($key);
-                    $oM->persist($findUser);
                     $oM->flush();
             }
                 ; break;
+            case('4'):
+                if (empty($post['data']['NewPlayer'])===FALSE) {
+                    $findUser = $oM->getRepository('Application\Entity\User')->findOneBy(array('fullName'=>$post['data']['OldPlayer']));
+                    $findUser->setFullName($post['data']['NewPlayer']);
+                    $oM->flush();
+                } else {
+                    $findUser = $oM->getRepository('Application\Entity\User')->findOneBy(array('fullName'=>$post['data']['OldPlayer']));
+
+                    $oM->remove($findUser);
+                    $oM->flush();
+                }
+                break;
         }
         return new JsonModel($returnArray);
     }
